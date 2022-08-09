@@ -1,0 +1,59 @@
+package com.chahal;
+
+import java.util.*;
+
+public class TopologicalSortingDFS {
+    public static void main(String[] args) {
+        int V = 5;
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i <= V; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        graph.get(5).add(0);
+        graph.get(5).add(2);
+
+        graph.get(2).add(3);
+
+        graph.get(3).add(1);
+
+        graph.get(4).add(0);
+        graph.get(4).add(1);
+
+        int[] topSort = topoSort(V, graph);
+        for(int i=0;i<=V;i++){
+            System.out.print(topSort[i]);
+        }
+    }
+
+    public static int[] topoSort(int N, ArrayList<ArrayList<Integer>> graph){
+        Stack<Integer> st = new Stack<>();
+        int[] vis = new int[N+1];
+
+        for(int i=0;i<=N;i++){
+            if(vis[i] == 0){
+                findTopoSort(i, vis, graph, st);
+            }
+        }
+
+        int[] topo = new int[N+1];
+        int idx = 0;
+        while(!st.isEmpty()){
+            topo[idx++] = st.pop();
+        }
+
+        return topo;
+    }
+
+    public static void findTopoSort(int node, int[] vis, ArrayList<ArrayList<Integer>> graph, Stack<Integer> st){
+        vis[node] = 1;
+
+        for(Integer it : graph.get(node)){
+            if (vis[it] == 0) {
+                findTopoSort(it, vis, graph, st);
+            }
+        }
+
+        st.push(node);
+    }
+}
