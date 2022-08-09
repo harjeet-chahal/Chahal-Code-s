@@ -1,0 +1,61 @@
+package com.chahal;
+
+// KAHN'S Algorithm
+
+import java.util.*;
+
+public class DirectedGraphCycleBFS {
+    public static void main(String[] args) {
+        int V = 5;
+        ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i <= V; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        graph.get(2).add(3);
+        graph.get(3).add(1);
+//        graph.get(3).add(5);
+        graph.get(4).add(0);
+        graph.get(4).add(1);
+        graph.get(5).add(0);
+        graph.get(5).add(2);
+
+        if(isCyclic(V, graph)){
+            System.out.println("Directed Graph is Cyclic");
+        }
+        else{
+            System.out.println("Directed Graph is Acyclic");
+        }
+    }
+
+    public static boolean isCyclic(int N, ArrayList<ArrayList<Integer>> graph){
+        int[] indegree = new int[N+1];
+        for (int i=0;i<N+1;i++){
+            for(Integer it : graph.get(i)){
+                indegree[it]++;
+            }
+        }
+
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i=0;i<=N;i++){
+            if(indegree[i] == 0){
+                queue.add(i);
+            }
+        }
+
+        int cnt = 0;
+        while(!queue.isEmpty()){
+            Integer node = queue.poll();
+            cnt++;
+
+            for (Integer it : graph.get(node)){
+                indegree[it]--;
+                if (indegree[it] == 0){
+                    queue.add(it);
+                }
+            }
+        }
+        if(cnt == N+1) return false;
+        return true;
+    }
+}
